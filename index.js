@@ -1,16 +1,19 @@
 const dns = require("node:dns")
 require('dotenv').config()
-console.log("DB_URL is:", process.env.DB_URL)
+// console.log("DB_URL is:", process.env.DB_URL)
+const cors = require('cors');
 const express = require('express');
 const authcontroller = require("./controller/authcontroller.js");
 const middleware = require("./middleware/middleware.js");
 const dbconfig = require("./config/dbconfig.js");
-
-dns.setServers(["8.8.8.8" , "1.1.1.1"])
 const app = express();
 app.use(express.json())
+app.use(cors());
 
-const Port = process.env.PORT || 5000;
+dns.setServers(["8.8.8.8" , "1.1.1.1"])
+
+
+const Port = process.env.PORT || 8000;
 
 
 dbconfig()
@@ -42,8 +45,13 @@ app.get("/", (req, res) => {
 })
 
 
-app.get("/alluser" , authcontroller.getUserAll )
+app.get("/alluser" , authcontroller.getUserAll )////
+
 app.post("/registration" , authcontroller.registration)
+
+app.delete("/delete/:id" , authcontroller.Userdeleate)
+
+app.put("/update/:id" , authcontroller.Userupdate)
 
 app.listen(Port, ()=>{
     console.log(`server is running on Port : ${Port}`);
