@@ -1,6 +1,5 @@
 const dns = require("node:dns")
 require('dotenv').config()
-// console.log("DB_URL is:", process.env.DB_URL)
 const cors = require('cors');
 const express = require('express');
 const authcontroller = require("./controller/authcontroller.js");
