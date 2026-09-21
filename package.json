@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "node.js.connet",
+=======
+  "name": "node.js.test",
+>>>>>>> 8ff4119c7a8b12d1d72d5bccaed7d971df4dfc2e
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -7,14 +11,23 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+>>>>>>> 8ff4119c7a8b12d1d72d5bccaed7d971df4dfc2e
   },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongodb": "^7.6.0",
+<<<<<<< HEAD
     "mongoose": "^9.10.0",
     "multer": "^2.4.0"
+=======
+    "mongoose": "^9.9.4"
+>>>>>>> 8ff4119c7a8b12d1d72d5bccaed7d971df4dfc2e
   }
 }
