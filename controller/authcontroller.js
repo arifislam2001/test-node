@@ -23,14 +23,17 @@ const registation =async  (req ,res)=>{
     })
     return
   }
+   const picture = req.file ? req.file.filename : "";
   
   const user = new usermodel({
 
       username : username,
       email : email,
-      password : password
+      password : password,
+      picture: picture    
     
   })
+  await user.save()
   
   res.status(201).json({
     success : true,
@@ -38,7 +41,6 @@ const registation =async  (req ,res)=>{
     data : user
   })
   
-  await user.save()
 }
 
 const userlogin = async (req, res) => {
@@ -96,5 +98,42 @@ const userupdate = async (req, res) => {
   }
 };
 
-module.exports = { registation , getalluser , userdeleate , userupdate , userlogin}
+
+const uploadpicture = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "you have to picture",
+      });
+    }
+
+    const picture = req.file.filename;
+
+    const updateduser = await usermodel.findByIdAndUpdate(
+      id,
+      { picture },
+      { new: true }
+    );
+
+    if (!updateduser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Picture uploaded successfully",
+      data: updateduser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Upload failed",
+      error: error.message,
+    });
+  }
+};
+module.exports = { registation , getalluser , userdeleate , userupdate , userlogin , uploadpicture}
 
