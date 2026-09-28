@@ -1,5 +1,5 @@
 const dns = require("node:dns").setServers(["8.8.8.8", "1.1.1.1"]);
-require('dotenv').config();
+require('dotenv').config({ debug: true });
 
 const express = require("express");
 const mongoose = require("mongoose");

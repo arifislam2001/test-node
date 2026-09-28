@@ -1,4 +1,3 @@
-
 const usermodel = require("../model/usermodel")
 
 const getalluser = async (req , res)=>{
@@ -6,13 +5,13 @@ const getalluser = async (req , res)=>{
    res.send(data)
 }
 
+
 const registation =async  (req ,res)=>{
-   
+
   const { username , email , password} = req.body
 
   console.log(req.body);
   
-
   const existuser = await usermodel.findOne({email})
 
   if(existuser){
@@ -23,7 +22,8 @@ const registation =async  (req ,res)=>{
     })
     return
   }
-   const picture = req.file ? req.file.filename : "";
+   const picture = req.file ? req.file.path : "";
+   console.log("FILE OBJECT:", req.file);
   
   const user = new usermodel({
 
@@ -42,6 +42,7 @@ const registation =async  (req ,res)=>{
   })
   
 }
+
 
 const userlogin = async (req, res) => {
   const { email, password } = req.body;
@@ -77,6 +78,8 @@ const userdeleate = async (req, res) => {
   }
 };
   
+
+
 const userupdate = async (req, res) => {
   const { id } = req.params;
   const { username, email, password } = req.body;
@@ -97,6 +100,7 @@ const userupdate = async (req, res) => {
     res.status(500).json({ message: "update hoinai", error: error.message }); 
   }
 };
+
 
 
 const uploadpicture = async (req, res) => {
@@ -135,5 +139,6 @@ const uploadpicture = async (req, res) => {
     });
   }
 };
+
 module.exports = { registation , getalluser , userdeleate , userupdate , userlogin , uploadpicture}
 
