@@ -24,6 +24,9 @@ const registation =async  (req ,res)=>{
   }
    const picture = req.file ? req.file.path : "";
    console.log("FILE OBJECT:", req.file);
+
+   console.log(picture);
+   
   
   const user = new usermodel({
 
