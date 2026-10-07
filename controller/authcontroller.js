@@ -79,17 +79,7 @@ const registation =async  (req ,res)=>{
     })
     return
   }
-<<<<<<< HEAD
 const picture = req.file ? req.file.path : "";
-=======
-   const picture = req.file ? req.file.path : "";
-   console.log("FILE OBJECT:", req.file);
-
-   console.log(picture);
-   
-  
-  const user = new usermodel({
->>>>>>> a1c576d947142688031210ae966277960ec64135
 
 const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -118,11 +108,13 @@ const userlogin = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await usermodel.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+    
     if (!isMatch) {
       return res.status(401).json({ success: false, message: "Wrong password" });
     }
