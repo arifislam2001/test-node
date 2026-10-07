@@ -1,4 +1,5 @@
 const usermodel = require("../model/usermodel")
+const bcrypt = require("bcrypt");
 
 const getalluser = async (req , res)=>{
    const data = await usermodel.find()
@@ -7,11 +8,67 @@ const getalluser = async (req , res)=>{
 
 
 const registation =async  (req ,res)=>{
+ 
+   const { username , email , password , profilepicture , address , phoneNumber , gender , dob} = req.body
+   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  //  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  const { username , email , password} = req.body
+   const isvalid = emailRegex.test(email)
+     if(!isvalid){
+    res.status(400).json({
+      success : false,
+      message : "Enter a valid email"
+    })
+    return
+   }
 
-  console.log(req.body);
+   if(!username){
+    res.status(400).json({
+      success : false,
+      message : "Please enter a username"
+    })
+    return
+   }
+   
+   if(!email){
+     res.status(400).json({
+       success : false,
+       message : "Please enter a email"
+      })
+      return
+    }
+    
+    if(!password){
+    res.status(400).json({
+      success : false,
+      message : "Please enter a password"
+    })
+    return
+   }
+
+     if(password.length < 8){
+       res.status(400).json({
+        success : false,
+        message : "Password will be 8 character"
+      })
+      return
+     }
+
+   if(username.length > 16){
+      res.status(400).json({
+      success : false,
+      message : "Username max will be 16 word"
+    })
+    return
+   }
   
+
+   if(!gender){
+     res.status(400).json({
+      success : false,
+      message : "Please select a gender"
+    })
+   }
   const existuser = await usermodel.findOne({email})
 
   if(existuser){
@@ -22,18 +79,20 @@ const registation =async  (req ,res)=>{
     })
     return
   }
-   const picture = req.file ? req.file.path : "";
-   console.log("FILE OBJECT:", req.file);
-  
-  const user = new usermodel({
+const picture = req.file ? req.file.path : "";
 
-      username : username,
-      email : email,
-      password : password,
-      picture: picture    
-    
-  })
-  await user.save()
+const hashedPassword = await bcrypt.hash(password, 10);
+
+const user = await usermodel.create({
+  username,
+  email,
+  password: hashedPassword,
+  profilepicture,
+  address,
+  phoneNumber,
+  gender,
+  dob
+});
   
   res.status(201).json({
     success : true,
@@ -45,20 +104,32 @@ const registation =async  (req ,res)=>{
 
 
 const userlogin = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await usermodel.findOne({ email });
-  if (!user) {
-    return res.status(404).json({ success: false, message: "User not found" });
+    const user = await usermodel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Wrong password" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
-
-  if (user.password !== password) {
-    return res.status(401).json({ success: false, message: "Wrong password" });
-  }
-
-  res.status(200).json({ success: true, message: "Login successful", user });
 };
-
 
 
 

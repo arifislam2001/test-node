@@ -22,7 +22,23 @@ const UserSchema = new Schema(
         },
           picture: { 
             type: String
-         } 
+         },
+         profilePicture:{
+            type : String
+         },
+         address:{
+            type : String
+         },
+         phoneNumber :{
+            type : String
+         },
+         gender :{
+            type : String,
+            enum : ["male" , "female" ,"others"]
+         },
+         dob:{
+            type : String
+         }
     },
       
     {

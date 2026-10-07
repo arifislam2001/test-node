@@ -4,7 +4,7 @@ require('dotenv').config({ debug: true });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const bcrypt = require("bcrypt")
 const router = require("./route/index.js");
 const dbconfig = require("./config/dbconfig");
 
