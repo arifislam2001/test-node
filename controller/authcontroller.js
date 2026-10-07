@@ -79,7 +79,17 @@ const registation =async  (req ,res)=>{
     })
     return
   }
+<<<<<<< HEAD
 const picture = req.file ? req.file.path : "";
+=======
+   const picture = req.file ? req.file.path : "";
+   console.log("FILE OBJECT:", req.file);
+
+   console.log(picture);
+   
+  
+  const user = new usermodel({
+>>>>>>> a1c576d947142688031210ae966277960ec64135
 
 const hashedPassword = await bcrypt.hash(password, 10);
 
