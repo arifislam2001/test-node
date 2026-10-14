@@ -4,6 +4,7 @@ require('dotenv').config({ debug: true });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt")
 const router = require("./route/index.js");
 const dbconfig = require("./config/dbconfig");
@@ -11,10 +12,12 @@ const dbconfig = require("./config/dbconfig");
 const app = express();
 
 app.use(cors({
-  origin : ["http://localhost:5173" , "http://localhost:5174" ]
+  origin : ["http://localhost:5173" , "http://localhost:5174" ],
+  credentials: true
 }));
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(router);
 app.use('/uploads', express.static('uploads'));
 
