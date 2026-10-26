@@ -1,5 +1,5 @@
-const dns = require("node:dns").setServers(["8.8.8.8", "1.1.1.1"]);
 require('dotenv').config({ debug: true });
+const dns = require("node:dns").setServers(["8.8.8.8", "1.1.1.1"]);
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt")
 const router = require("./route/index.js");
 const dbconfig = require("./config/dbconfig");
+
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use('/uploads', express.static('uploads'));
 const Port = process.env.PORT || 9000;
 
 dbconfig();
+
+
 
 app.get("/product", (req, res) => {
   res.send("Product route");

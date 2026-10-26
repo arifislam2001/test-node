@@ -1,26 +1,27 @@
-const usermodel = require("../model/usermodel");
 const { verifyAccessToken } = require("../helper/tokenHelper");
+const userModel = require("../model/UserModel");
 
-const authenticate = async (req, res, next) => {
+const protect = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      success: false,
+      message: "Not authorized. Provide a Bearer access token.",
+    });
+  }
+
+  const token = authHeader.split(" ")[1];
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        success: false,
-        message: "Access token is required",
-      });
-    }
-
-    const token = authHeader.split(" ")[1];
     const decoded = verifyAccessToken(token);
-    const user = await usermodel.findById(decoded.id);
 
-    if (!user) {
+    const user = await userModel.findById(decoded.id)
+
+    if(!user){
       return res.status(401).json({
         success: false,
-        message: "User not found",
-      });
+        message: "User Not exist"
+      })
     }
 
     req.user = user;
@@ -28,23 +29,48 @@ const authenticate = async (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       success: false,
-      message: "Invalid or expired access token",
+      message: "Invalid or expired access token.",
     });
   }
 };
 
-const requireVerifiedEmail = (req, res, next) => {
-  if (!req.user?.isEmailVerified) {
+const requiedAdmin = (req, res, next) => {
+  if(req.user.role !== "admin"){
     return res.status(403).json({
       success: false,
-      message: "Please verify your email first",
-    });
+      message: "Admin access required."
+    })
   }
+  next()
+}
+const requiedEmployee = (req, res, next) => {
+  if(req.user.role !== "employee"){
+    return res.status(403).json({
+      success: false,
+      message: "only employee can access this route"
+    })
+  }
+  next()
+}
 
-  next();
-};
+const requiedUser = (req, res, next) => {
+  if(req.user.role !== "user"){
+    return res.status(403).json({
+      success: false,
+      message: "only user can access this route"
+    })
+  }
+  next()
+}
 
-module.exports = {
-  authenticate,
-  requireVerifiedEmail,
-};
+const isEmailVerified = (req, res, next) => {
+  if(!req.user.isEmailVerified){
+    return res.status(403).json({
+      success: false,
+      message: "Please Verify your email first."
+    })
+  }
+  next()
+}
+
+module.exports = { protect, requiedAdmin, requiedEmployee, requiedUser, isEmailVerified };
